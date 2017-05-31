@@ -1,5 +1,8 @@
-ReactDOM.render(React.createElement(
+var component = React.createElement(
   'h1',
   null,
   'Hello World!'
-), document.getElementById('contents'));
+);
+var contentNode = document.getElementById('contents');
+
+ReactDOM.render(component, contentNode);

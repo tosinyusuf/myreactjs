@@ -1,1 +1,4 @@
-ReactDOM.render(<h1>Hello World!</h1>, document.getElementById('contents'));
+var component = <h1>Hello World!</h1>;
+var contentNode = document.getElementById('contents');
+
+ReactDOM.render(component, contentNode);
