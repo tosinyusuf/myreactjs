@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
 app.use(express.static('static')); // bind middleware function - express.static.
+app.use(bodyParser.json());
 
 const issues = [
     {
@@ -18,6 +20,17 @@ app.get('/api/issues', (req,res)=> {
     const metadata = {total_count: issues.length};
     console.log('sending response');
     res.json({_metadata: metadata, records: issues});
+});
+
+app.post('/api/issues', (req, res)=> {
+    const newIssue = req.body;
+    newIssue.id = issues.length + 1;
+    newIssue.created = new Date();
+    if (!newIssue.status) {
+        newIssue.status = 'New';
+    }
+        issues.push(newIssue);
+        res.json(newIssue);
 });
 
 app.listen(3000, () => {
