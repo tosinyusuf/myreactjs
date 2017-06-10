@@ -120,23 +120,27 @@ class IssueList extends React.Component {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(newIssue)
     })
-    .then(response => response.json())
-    .then(updatedIssue => {
-        updatedIssue.created = new Date(updatedIssue.created);
-        if (updatedIssue.completionDate) {
-            updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+    .then(response => {
+        if (response.ok) {
+            response.json().then(updatedIssue => {
+              updatedIssue.created = new Date(updatedIssue.created);
+              if (updatedIssue.completionDate) {
+                  updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+              }
+
+              const newIssues = this.state.issues.concat(updatedIssue);
+              this.setState({issues: newIssues});
+            });
+        } else {
+          response.json().then(error => {
+            alert("Failed to add issue:" + error.message)
+          });
         }
-        const newIssues = this.state.issues.concat(updateIssue);
-        this.setState({issues: newIssues});
     })
     .catch(err => {
         alert("Error in sending data to server:" + err.message);
     });
 
-    const newIssues = this.state.issues.slice(); // create copy of array
-    newIssue.id = this.state.issues.length + 1;
-    newIssues.push(newIssue);
-    this.setState({issues: newIssues});
   }
 
   render() {

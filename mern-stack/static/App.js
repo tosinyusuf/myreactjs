@@ -268,22 +268,24 @@ var IssueList = function (_React$Component5) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newIssue)
       }).then(function (response) {
-        return response.json();
-      }).then(function (updatedIssue) {
-        updatedIssue.created = new Date(updatedIssue.created);
-        if (updatedIssue.completionDate) {
-          updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+        if (response.ok) {
+          response.json().then(function (updatedIssue) {
+            updatedIssue.created = new Date(updatedIssue.created);
+            if (updatedIssue.completionDate) {
+              updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+            }
+
+            var newIssues = _this7.state.issues.concat(updatedIssue);
+            _this7.setState({ issues: newIssues });
+          });
+        } else {
+          response.json().then(function (error) {
+            alert("Failed to add issue:" + error.message);
+          });
         }
-        var newIssues = _this7.state.issues.concat(updateIssue);
-        _this7.setState({ issues: newIssues });
       }).catch(function (err) {
         alert("Error in sending data to server:" + err.message);
       });
-
-      var newIssues = this.state.issues.slice(); // create copy of array
-      newIssue.id = this.state.issues.length + 1;
-      newIssues.push(newIssue);
-      this.setState({ issues: newIssues });
     }
   }, {
     key: 'render',
